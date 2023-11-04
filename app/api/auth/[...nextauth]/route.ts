@@ -3,6 +3,19 @@ import Github from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 
+import { DefaultSession, DefaultUser } from "next-auth";
+
+declare module "next-auth" {
+  interface User extends DefaultUser {
+    id: number;
+  }
+  interface Session {
+    user?: {
+      id: string;
+    } & DefaultSession["user"];
+  }
+}
+
 const handler = NextAuth({
   adapter: PrismaAdapter(new PrismaClient()),
   callbacks: {
